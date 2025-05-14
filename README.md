@@ -53,20 +53,20 @@ This guide will walk you through setting up a Python script on a free Oracle Clo
 Networking > Virtual Cloud Networks
 ```
 3. Check your VM’s VCN:
-- When you created your instance, a VCN (Virtual Cloud Network) and subnet were automatically created unless you chose an existing one.
+   - When you created your instance, a VCN (Virtual Cloud Network) and subnet were automatically created unless you chose an existing one.
 4. Click on your VCN, and verify it includes:
-- Subnet
-- Internet Gateway
-- Route Table
+   - Subnet
+   - Internet Gateway
+   - Route Table
 #### Step 2: Add an Internet Gateway (if missing)
 1. In your VCN, click "Internet Gateways" (left panel).
 2. Click Create Internet Gateway, name it (e.g., IGW-For-VM), and create.
 3. Go to Route Tables in the same VCN.
 4. Click on the route table used by your subnet (e.g., Default Route Table for VCN).
 5. Click Add Route Rule:
-- Target Type: Internet Gateway
-- Destination CIDR Block: 0.0.0.0/0
-- Target: Select the internet gateway you just created
+   - Target Type: Internet Gateway
+   - Destination CIDR Block: 0.0.0.0/0
+   - Target: Select the internet gateway you just created
 #### Step 3: Set the Subnet to Public
 If you want the VM to be accessible from the internet:
 1. In your subnet configuration, check Public Subnet is enabled.
@@ -110,16 +110,16 @@ Update and install required packages:
 
 3. Enable the Google Drive API:
 
-- In the navigation menu, go to APIs & Services > Library.
+   - In the navigation menu, go to APIs & Services > Library.
 
-- Search for Google Drive API and click Enable.
+   - Search for Google Drive API and click Enable.
 
 4. Create credentials:
-- Navigate to APIs & Services > Credentials.
+   - Navigate to APIs & Services > Credentials.
 
-- Click Create Credentials > OAuth client ID.
+   - Click Create Credentials > OAuth client ID.
 
-- Choose Desktop App and download the **credentials.json** file.
+   - Choose Desktop App and download the **credentials.json** file.
 
 5. Upload this file to your VM:
 ```bash
@@ -163,3 +163,10 @@ python3 insta.py
 2. Wait for the script to detect and upload it.
 
 3. Check Instagram for the new post and output.log for logs
+
+
+
+
+
+
+##### More Question? Write me! Dont forget to say Hi
