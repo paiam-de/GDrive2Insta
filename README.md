@@ -57,4 +57,76 @@ This guide will walk you through setting up a Python script on a free Oracle Clo
 2. Change the permissions of your private key file:
    ```bash
    chmod 400 /path/to/your/id_rsa  # Replace with actual path to your private key
+  
+   ssh -i /path/to/your/id_rsa ubuntu@<your_public_ip> # Have a look at your VM Networking infos. You will find it.
 
+
+## Configuring the VM
+### 📦 Installing Dependencies
+
+Update and install required packages:
+ ```bash
+ sudo apt update && sudo apt upgrade -y
+ sudo apt install python3 python3-pip git unzip -y 
+ pip3 install instagrapi google-auth google-auth-oauthlib google-api-python-client 
+ ```
+## Setting up Google Drive Access
+1. Go to the Google Cloud Console.
+
+2. Create a new project or use an existing one.
+
+3. Enable the Google Drive API:
+
+- In the navigation menu, go to APIs & Services > Library.
+
+- Search for Google Drive API and click Enable.
+
+4. Create credentials:
+- Navigate to APIs & Services > Credentials.
+
+- Click Create Credentials > OAuth client ID.
+
+- Choose Desktop App and download the **credentials.json** file.
+
+5. Upload this file to your VM:
+```bash
+scp -i /path/to/your/id_rsa credentials.json ubuntu@<your_public_ip>:~
+```
+6. When running your script for the first time, it will open a browser link. Open it on your local machine, authorize, and paste the token if required. This will create a token.json for future authentication.
+
+## Configuring Instagram Access
+### The script uses instagrapi to log in and upload posts.
+### 🔐 Instagram Login
+You can store your credentials securely in a .env file or hardcode them (not recommended for production).
+
+Example:
+```bash
+from instagrapi import Client
+
+cl = Client()
+cl.login("your_username", "your_password")
+```
+- 🛑 Instagram may temporarily block cloud logins or require challenge verification. Use a real device first to build trust.
+
+## Uploading the Script
+1. Save your Python script as insta.py
+2. Use scp to upload:
+```bash
+scp -i /path/to/your/id_rsa uploader.py ubuntu@<your_public_ip>:~
+```
+3. Ensure it's executable:
+```bash
+chmod +x uploader.py
+```
+### Running the Script
+```bash
+python3 insta.py
+```
+
+
+## Testing the Script
+1. Place an image in your Google Drive folder.
+
+2. Wait for the script to detect and upload it.
+
+3. Check Instagram for the new post and output.log for logs
