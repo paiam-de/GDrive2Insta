@@ -75,11 +75,13 @@ If you want the VM to be accessible from the internet:
 1. Go to Networking > Virtual Cloud Networks > Your VCN > Security Lists.
 2. Click the security list associated with your subnet (e.g., Default Security List for VCN).
 3. Add the following Ingress Rules to allow SSH, HTTP, and VNC:
+ ```bash
 | Protocol | Port Range | Source CIDR | Purpose    |
 | -------- | ---------- | ----------- | ---------- |
 | TCP      | 22         | 0.0.0.0/0   | SSH        |
 | TCP      | 5901-5910  | 0.0.0.0/0   | VNC access |
 | TCP      | 80, 443    | 0.0.0.0/0   | Web access |
+ ```
 4. Add an Egress Rule:
 - Destination CIDR: 0.0.0.0/0
 - All Protocols: Allow all outbound traffic
