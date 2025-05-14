@@ -14,14 +14,9 @@ This guide will walk you through setting up a Python script on a free Oracle Clo
 3. [Installing Dependencies](#installing-dependencies)
 4. [Setting up Google Drive Access](#setting-up-google-drive-access)
 5. [Configuring Instagram Access](#configuring-instagram-access)
-6. [Uploading the Script](#uploading-the-script)
-7. [Running the Script](#running-the-script)
-   - [Running the Script with `nohup`](#running-the-script-with-nohup)
-8. [Testing the Script](#testing-the-script)
-9. [Troubleshooting](#troubleshooting)
-10. [Important Considerations](#important-considerations)
-11. [Code Explanation](#code-explanation)
-   - [Key Functions and Logic](#key-functions-and-logic)
+6. [Uploading and running the Script](#uploading-the-script)
+7. [Testing the Script](#testing-the-script)
+
 
 ## Prerequisites
 
@@ -50,6 +45,44 @@ This guide will walk you through setting up a Python script on a free Oracle Clo
    - Choose **"Generate SSH Key Pair"**.
    - Download the private key file (e.g., `id_rsa`). **Keep it safe**.
 6. Click **Create**. Your instance will launch, and its status will change to **"Running"**.
+### Enabling Internet Access on Oracle Cloud VM
+#### Step 1: Create/Check VCN and Subnet
+1. Go to the Oracle Cloud Console.
+2. Navigate to:
+```bash
+Networking > Virtual Cloud Networks
+```
+3. Check your VM’s VCN:
+- When you created your instance, a VCN (Virtual Cloud Network) and subnet were automatically created unless you chose an existing one.
+4. Click on your VCN, and verify it includes:
+- Subnet
+- Internet Gateway
+- Route Table
+#### Step 2: Add an Internet Gateway (if missing)
+1. In your VCN, click "Internet Gateways" (left panel).
+2. Click Create Internet Gateway, name it (e.g., IGW-For-VM), and create.
+3. Go to Route Tables in the same VCN.
+4. Click on the route table used by your subnet (e.g., Default Route Table for VCN).
+5. Click Add Route Rule:
+- Target Type: Internet Gateway
+- Destination CIDR Block: 0.0.0.0/0
+- Target: Select the internet gateway you just created
+#### Step 3: Set the Subnet to Public
+If you want the VM to be accessible from the internet:
+1. In your subnet configuration, check Public Subnet is enabled.
+2. Ensure Auto-assign public IP address is enabled when launching the VM (or manually assign a public IP if not).
+#### Step 4: Configure Security List (Firewall)
+1. Go to Networking > Virtual Cloud Networks > Your VCN > Security Lists.
+2. Click the security list associated with your subnet (e.g., Default Security List for VCN).
+3. Add the following Ingress Rules to allow SSH, HTTP, and VNC:
+| Protocol | Port Range | Source CIDR | Purpose    |
+| -------- | ---------- | ----------- | ---------- |
+| TCP      | 22         | 0.0.0.0/0   | SSH        |
+| TCP      | 5901-5910  | 0.0.0.0/0   | VNC access |
+| TCP      | 80, 443    | 0.0.0.0/0   | Web access |
+4. Add an Egress Rule:
+- Destination CIDR: 0.0.0.0/0
+- All Protocols: Allow all outbound traffic
 
 ### Connecting to Your VM
 
@@ -112,11 +145,11 @@ cl.login("your_username", "your_password")
 1. Save your Python script as insta.py
 2. Use scp to upload:
 ```bash
-scp -i /path/to/your/id_rsa uploader.py ubuntu@<your_public_ip>:~
+scp -i /path/to/your/id_rsa insta.py ubuntu@<your_public_ip>:~
 ```
 3. Ensure it's executable:
 ```bash
-chmod +x uploader.py
+chmod +x insta.py
 ```
 ### Running the Script
 ```bash
